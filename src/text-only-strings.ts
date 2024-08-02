@@ -6,6 +6,23 @@ const createRule = ESLintUtils.RuleCreator(
   (name) => `https://sunrun.com/rule/${name}`,
 );
 
+
+function getNodeForSymbolLookup(node) {
+  switch (node.expression.type) {
+    case 'CallExpression':
+      return node.expression.callee;
+    default:
+      return node.expression;
+  }
+}
+
+function getReturnTypeOfFunction(type, checker) {
+  // TODO: How to handle multiple signatures?
+  const signatures = checker.getSignaturesOfType(type, 0);
+  const returnType = checker.getReturnTypeOfSignature(signatures[0]);
+  return returnType;
+}
+
 export const rule = createRule({
   create(context) {
     return {
@@ -13,20 +30,23 @@ export const rule = createRule({
         const services = ESLintUtils.getParserServices(context);
         const checker = services.program.getTypeChecker();
 
-        const symbol = services.getSymbolAtLocation(node.expression);
-        if (symbol) {
-          console.log('internal');
-          const type = services.program
+        const symbol = services.getSymbolAtLocation(getNodeForSymbolLookup(node));
+        if (symbol && node) {
+          let type = services.program
             .getTypeChecker()
-            // @ts-ignore
+            // @ts-ignore - node.expression
             .getTypeOfSymbolAtLocation(symbol, node.expression);
 
-          // @ts-ignore
+          if (node.expression.type === 'CallExpression') {
+            // We need to narrow to just the return type of calling the function
+            type = getReturnTypeOfFunction(type, checker);
+          }
+
+          // @ts-ignore - isTypeAssignableTo
           if (!checker.isTypeAssignableTo(type, checker.getStringType())) {
-            console.log("erporting");
             context.report({
               node,
-              messageId: "loopOverEnum",
+              messageId: "textOutsideText",
               data: {}
             });
           }
@@ -37,11 +57,10 @@ export const rule = createRule({
   },
   meta: {
     docs: {
-      description:
-        "React Native Text components must have either strings or null as their children",
+      description: "Avoid rendering text outside <Text> components",
     },
     messages: {
-      loopOverEnum: "Text components can only render type string or null",
+      textOutsideText: "Possible text rendered outside <Text> component.",
     },
     type: "suggestion",
     schema: [],

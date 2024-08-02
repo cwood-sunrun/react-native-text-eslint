@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "test": "vitest run"
+  },
   "devDependencies": {
     "@typescript-eslint/parser": "^7.0.2",
     "@typescript-eslint/rule-tester": "^7.0.2",

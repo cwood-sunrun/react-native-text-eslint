@@ -16,10 +16,10 @@ const ruleTester = new RuleTester({
   },
 });
 
-ruleTester.run("my-rule", rule, {
+ruleTester.run("enforce-string-in-text", rule, {
   invalid: [
     {
-      code: readFileSync("./react-native-text.tsx", "utf8"),
+      code: readFileSync("./tests/render-number-primitive.tsx", "utf8"),
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
@@ -27,78 +27,24 @@ ruleTester.run("my-rule", rule, {
       },
       errors: 1,
     },
-
-    // you can enable JSX parsing by passing parserOptions.ecmaFeatures.jsx = true
-    // {
-    //   code: "const z = <div />;",
-    //   parserOptions: {
-    //     ecmaFeatures: {
-    //       jsx: true,
-    //     },
-    //   },
-    // },
+    {
+      code: readFileSync("./tests/render-object.tsx", "utf8"),
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+      errors: 1,
+    },
+    {
+      code: readFileSync("./tests/render-function-call.tsx", "utf8"),
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+      errors: 1,
+    },
   ],
-  valid: [
-    // invalid tests must always be an object
-    // {
-    //   code: "const a = 1;",
-    //   // invalid tests must always specify the expected errors
-    //   errors: [
-    //     {
-    //       messageId: "ruleMessage",
-    //       // If applicable - it's recommended that you also assert the data in
-    //       // addition to the messageId so that you can ensure the correct message
-    //       // is generated
-    //       data: {
-    //         placeholder1: "a",
-    //       },
-    //     },
-    //   ],
-    // },
-    //
-    // // fixers can be tested using the output parameter
-    // {
-    //   code: "const b = 1;",
-    //   output: "const c = 1;",
-    //   errors: [
-    //     /* ... */
-    //   ],
-    // },
-    // passing `output = null` will enforce the code is NOT changed
-    // {
-    //   code: "const c = 1;",
-    //   output: null,
-    //   errors: [
-    //     /* ... */
-    //   ],
-    // },
-    //
-    // // suggestions can be tested via errors
-    // {
-    //   code: "const d = 1;",
-    //   output: null,
-    //   errors: [
-    //     {
-    //       messageId: "suggestionError",
-    //       suggestions: [
-    //         {
-    //           messageId: "suggestionOne",
-    //           output: "const e = 1;",
-    //         },
-    //       ],
-    //     },
-    //   ],
-    // },
-    // // passing `suggestions = null` will enforce there are NO suggestions
-    // {
-    //   code: "const d = 1;",
-    //   output: null,
-    //   errors: [
-    //     {
-    //       messageId: "noSuggestionError",
-    //       suggestions: null,
-    //     },
-    //   ],
-    // },
-  ],
+  valid: [ ],
 });
