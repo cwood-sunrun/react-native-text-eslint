@@ -17,14 +17,7 @@ const ruleTester = new RuleTester({
 });
 
 ruleTester.run("my-rule", rule, {
-  valid: [
-    // // valid tests can be a raw string,
-    // "const x = 1;",
-    // // or they can be an object
-    // {
-    //   code: "const y = 2;",
-    //   options: [{ ruleOption: true }],
-    // },
+  invalid: [
     {
       code: readFileSync("./react-native-text.tsx", "utf8"),
       parserOptions: {
@@ -32,6 +25,7 @@ ruleTester.run("my-rule", rule, {
           jsx: true,
         },
       },
+      errors: 1,
     },
 
     // you can enable JSX parsing by passing parserOptions.ecmaFeatures.jsx = true
@@ -44,7 +38,7 @@ ruleTester.run("my-rule", rule, {
     //   },
     // },
   ],
-  invalid: [
+  valid: [
     // invalid tests must always be an object
     // {
     //   code: "const a = 1;",

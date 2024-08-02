@@ -9,51 +9,29 @@ const createRule = ESLintUtils.RuleCreator(
 export const rule = createRule({
   create(context) {
     return {
-      JSXElement: function (node) {
+      JSXExpressionContainer: function(node) {
         const services = ESLintUtils.getParserServices(context);
         const checker = services.program.getTypeChecker();
 
-        if (node.openingElement && node.closingElement) {
-          // const symbol = services.getSymbolAtLocation(node.openingElement.name);
-          // console.log("symobl", symbol);
-          // const type = services.program
-          //   .getTypeChecker()
-          //   .getTypeOfSymbolAtLocation(symbol, node.openingElement);
-          const symbol = services.getSymbolAtLocation(
-            node.children[0].expression,
-          );
-
-          const openingType = services.getTypeAtLocation(
-            node.openingElement.name,
-          );
-          // @ts-ignore
-          const type = services.getTypeAtLocation(symbol.valueDeclaration);
-          const strName = checker.typeToString(type);
-          // console.log("symbol", symbol, strName);
-          //
-          // console.log("checker", checker);
-          //
-          console.log(
-            "openinType",
-            !!openingType,
-            !!type,
-            openingType === type,
-          );
+        const symbol = services.getSymbolAtLocation(node.expression);
+        if (symbol) {
+          console.log('internal');
+          const type = services.program
+            .getTypeChecker()
+            // @ts-ignore
+            .getTypeOfSymbolAtLocation(symbol, node.expression);
 
           // @ts-ignore
-          const result = checker.isTypeAssignableTo(type, openingType);
-
-          console.log(type, openingType);
-
-          console.log("result", result);
-
-          // if (node.openingElement.name.name === "Text") {
-          //   console.log("is text");
-          // }
-          // if (node.openingElement.name === "Text") {
-          // }
+          if (!checker.isTypeAssignableTo(type, checker.getStringType())) {
+            console.log("erporting");
+            context.report({
+              node,
+              messageId: "loopOverEnum",
+              data: {}
+            });
+          }
         }
-        // console.log("jsx element", node);
+
       },
     };
   },

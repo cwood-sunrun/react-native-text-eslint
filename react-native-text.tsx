@@ -1,7 +1,7 @@
 import React from "react";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 
 export function Second() {
-  const test = "test";
-  return <Text>{test}</Text>;
+  const test = 9;
+  return <View>{test}</View>;
 }
