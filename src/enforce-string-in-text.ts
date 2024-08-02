@@ -42,6 +42,9 @@ export const rule = createRule({
             type = getReturnTypeOfFunction(type, checker);
           }
 
+          // console.log(type, checker.typeToString(type));
+
+
           // @ts-ignore - isTypeAssignableTo
           if (!checker.isTypeAssignableTo(type, checker.getStringType())) {
             context.report({

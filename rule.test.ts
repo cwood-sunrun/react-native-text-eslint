@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
 import * as vitest from "vitest";
 import { RuleTester } from "@typescript-eslint/rule-tester";
-import { rule } from "./src/text-only-strings";
+import { rule } from "./src/enforce-string-in-text";
 
 RuleTester.afterAll = vitest.afterAll;
 RuleTester.it = vitest.it;
@@ -45,6 +45,15 @@ ruleTester.run("enforce-string-in-text", rule, {
       },
       errors: 1,
     },
+    {
+      code: readFileSync("./tests/render-union-type.tsx", "utf8"),
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+      errors: 1,
+    },
   ],
-  valid: [ ],
+  valid: [],
 });
